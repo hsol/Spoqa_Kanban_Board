@@ -1,0 +1,36 @@
+.spoqa-blue { color:#4c80f1; }
+.spoqa-blue.light { color:#8c6bf7; }
+.spoqa-blue.dark { color:#2c5ae9; }
+
+.spoqa-grey { color:#81878b; }
+.spoqa-grey.light { color:#a9afb3; }
+.spoqa-grey.dark { color:#4d5256; }
+
+.spoqa-btn {
+    position: relative;
+    display: inline-block;
+    padding: 1em 2em;
+    font-size:0.8em;
+    font-weight: normal;
+    color: #4d5256;
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background: #fff none;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-appearance: none;
+    transition: background 0.2s ease, color 0.1s ease;
+}
+
+.spoqa-btn.primary {
+    color: #4c80f1;
+    border-color: #4c80f1;
+    -webkit-font-smoothing: subpixel-antialiased;
+    box-shadow: 0 1px 1px rgba(76, 128, 241, 0.32);
+}

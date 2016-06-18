@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Spoqa Kanban board</title>
+
+    <!-- Library Styles -->
+    <link rel="stylesheet" href="./resources/styles/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="./resources/styles/lib/jquery-ui.min.css">
+
+    <!-- Library Scripts -->
+    <script type="text/javascript" src="./resources/scripts/lib/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="./resources/scripts/lib/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="./resources/scripts/lib/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="./resources/scripts/lib/jquery.ui.touch-punch.min.js"></script>
+
+    <script type="text/javascript" src="./resources/scripts/lib/mustache.min.js"></script>
+    <script type="text/javascript" src="./resources/scripts/lib/JsQuery.min.js"></script>
+    <script type="text/javascript" src="./resources/scripts/lib/isMobile.min.js"></script>
+
+    <script src="http://www.google.com/jsapi"></script>
+    <script>
+        google.load( "webfont", "1" );
+        google.setOnLoadCallback(function() {
+            WebFont.load({ custom: {
+                families: [ "Spoqa Han Sans" ],
+                urls: [ "//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css" ]
+            }});
+        });
+    </script>
+
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="./resources/styles/base.css"/>
+    <link rel="stylesheet" href="./resources/styles/spoqa.css"/>
+    <link rel="stylesheet" href="./resources/styles/kanban.css"/>
+
+    <!-- Page Scripts -->
+    <script type="text/javascript" src="./resources/scripts/base.js"></script>
+
+    <script id="tpl-card" type="x-tmpl-mustache">
+        <li class="card {{issueType}}" data-idx="{{idx}}">
+            <section class="btn-group">
+                <img src="{{icnUrl}}">
+            </section>
+            <section class="info">
+                <header class="title spoqa-blue light">{{name}}</header>
+                <div class="btn-remove"><img src="./resources/images/icn_cancel_black.png" /></div>
+                <article class="content">{{contents}}</article>
+                <footer class="reg w_425_h">{{reg}}</footer>
+            </section>
+        </li>
+    </script>
+
+    <!--[if lte IE 9]>
+    <script src="./resources/scripts/lib/selectivizr-min.js"></script>
+    <script src="./resources/scripts/lib/html5shiv.js"></script>
+    <script src="./resources/scripts/lib/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<header id="header" class="clear">
+    <section class="layout-left">
+        <div class="brand-logo spoqa-grey">Spoqa</div>
+        <div class="page-title">Kanban board</div>
+        <div class="quick-filters">
+            <label class="spoqa-grey">QUICK FILTERS</label>
+            <ul>
+                <li class="act-filter all spoqa-blue light">All</li>
+                <li class="act-filter imp spoqa-blue light">Improvement</li>
+                <li class="act-filter def spoqa-blue light">Defect</li>
+            </ul>
+        </div>
+    </section>
+    <section class="layout-right">
+        <button class="btn-issue act-pop spoqa-btn primary">Create Issue</button>
+    </section>
+</header>
+<section id="article">
+    <section class="grid to-do">
+        <header class="grid-head"><span class="count">0</span><label>To Do</label></header>
+        <article class="grid-body">
+            <ul class="card-group"></ul>
+        </article>
+        <footer></footer>
+    </section>
+    <section class="grid in-progress">
+        <header class="grid-head"><span class="count">0</span><label>In Progress</label></header>
+        <article class="grid-body">
+            <ul class="card-group">
+            </ul>
+        </article>
+        <footer></footer>
+    </section>
+    <section class="grid review">
+        <header class="grid-head"><span class="count">0</span><label>Review</label></header>
+        <article class="grid-body">
+            <ul class="card-group"></ul>
+        </article>
+        <footer></footer>
+    </section>
+    <section class="grid done">
+        <header class="grid-head"><span class="count">0</span><label>Done</label></header>
+        <article class="grid-body">
+            <ul class="card-group"></ul>
+        </article>
+        <footer></footer>
+    </section>
+</section>
+<section class="modal-group">
+    <div id="issue-creator" class="modal">
+        <div class="btn-close"><img class="w_1024_h" src="./resources/images/icn_cancel.png"><img class="w_1024" src="./resources/images/icn_cancel_black.png"></div>
+        <header class="title">
+            <h1>Create Issue</h1>
+            <p>Nulla metus metus ullamcorper vel, tincidunt sed euismod in nibh.</p>
+        </header>
+        <article class="content">
+            <div class="issue-text">
+                <label class="spoqa-grey light">Issue name</label>
+                <input type="text" name="issue-name"/>
+            </div>
+            <div class="issue-text">
+                <label class="spoqa-grey light">Issue contents</label>
+                <input type="text" name="issue-contents"/>
+            </div>
+            <div class="issue-type">
+                <label class="spoqa-grey light">Issue type</label>
+                <div class="select_box">
+                    <label class="type-imp" for="issue-type">Improvement</label>
+                    <select id="issue-type" name="issue-type">
+                        <option value="imp">Improvement</option>
+                        <option value="def">Defect</option>
+                    </select>
+                </div>
+            </div>
+            <div class="issue-text">
+                <label class="spoqa-grey light">Issue tags</label>
+                <input type="text" name="issue-tag"/>
+            </div>
+        </article>
+        <footer class="submit">
+            <button class="btn-issue act-create spoqa-btn primary">Create</button>
+        </footer>
+    </div>
+</section>
+<footer id="footer"></footer>
+</body>
+</html>

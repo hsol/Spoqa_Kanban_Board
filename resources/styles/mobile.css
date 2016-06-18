@@ -1,0 +1,2 @@
+section#article section.grid article.grid-body ul.card-group li.card { width:90%; }
+section#article section.grid article.grid-body ul.card-group li.card section.info .btn-remove { display:block; }
