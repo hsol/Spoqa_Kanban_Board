@@ -28,9 +28,15 @@ $(function () {
                 AUTO_BACKUP: "boolean",
                 AUTO_BACKUP_TIME: "number"
             },
+            GRID: {
+                sequence: "number",
+                title: "string",
+                selector: "string"
+            },
             CARD: {
+                sequence: "number",
                 idx: "number",
-                progress: "string",
+                grid: "string",
                 issueType: "string",
                 name: "string",
                 contents: "string",
@@ -39,11 +45,39 @@ $(function () {
             }
         },
         DB: {
-            CARDS: []
+            CARDS: [],
+            GRIDS: []
         },
         QUERY: new JsQuery()
     };
-    window.CONST.DB = $.extend(window.CONST.DB, $.cookie("Database"));
+    window.CONST.DB.SETTING = $.extend(window.CONST.DB.SETTING, $.cookie("DB-SETTING"));
+    window.CONST.DB.GRIDS = $.extend(window.CONST.DB.GRIDS, $.cookie("DB-GRIDS"));
+    window.CONST.DB.CARDS = $.extend(window.CONST.DB.CARDS, $.cookie("DB-CARDS"));
+
+    if(window.CONST.DB.GRIDS.length <= 0) {
+        window.CONST.DB.GRIDS = [
+            {
+                sequence: 0,
+                selector: "to-do",
+                title: "To Do"
+            },
+            {
+                sequence: 1,
+                selector: "in-progress",
+                title: "In Progress"
+            },
+            {
+                sequence: 2,
+                selector: "review",
+                title: "Review"
+            },
+            {
+                sequence: 3,
+                selector: "done",
+                title: "Done"
+            }
+        ];
+    }
 
     initSettings();
 });
@@ -56,8 +90,10 @@ $(function () {
 function initSettings() {
     clearInterval(window.CONST.INTERVAL);
 
-    if (window.CONST.DB.SETTING ? window.CONST.DB.SETTING.SECRET_MODE : window.CONST.SECRET_MODE)
-        $.removeCookie("Database");
+    if (window.CONST.DB.SETTING ? window.CONST.DB.SETTING.SECRET_MODE : window.CONST.SECRET_MODE){
+        $.removeCookie("DB-GRIDS");
+        $.removeCookie("DB-CARDS");
+    }
     else {
         if (window.CONST.DB.SETTING ? window.CONST.DB.SETTING.AUTO_BACKUP : window.CONST.AUTO_BACKUP) {
             window.CONST.INTERVAL = setInterval(function () {
@@ -73,6 +109,29 @@ function initSettings() {
         }
     }
 }
+
+$.fn.pushGrid = function (data, dbState) {
+    $(this).append(Mustache.render($('#tpl-grid').html(), data));
+
+    if (dbState)
+        window.CONST.DB.GRIDS.push(data);
+};
+
+$.fn.removeGrid = function() {
+    if(window.CONST.DB.GRIDS.length <= 1) {
+        alert("Can not remove grid anymore.");
+        return false;
+    }
+
+    if($(this).find("ul.card-group li.card").length > 0) {
+        if(!confirm("Grid include cards more than one. Really do you want remove?"))
+            return false;
+    }
+    window.CONST.QUERY.setObject(window.CONST.DB.GRIDS);
+    window.CONST.QUERY.setQuery("sequence, selector, title WHERE selector != '" + $(this).attr("class").replace("grid ", "") + "' ORDER sequence");
+    window.CONST.DB.GRIDS = window.CONST.QUERY.getResult();
+    $(this).remove();
+};
 
 /**
  * @description Modal 활성화
@@ -153,13 +212,13 @@ $.fn.pushCard = function (data, dbState) {
     data.icnUrl = window.CONST.ISSUE_TYPE_IMG[data.issueType];
     if (!data.idx) {
         window.CONST.QUERY.setObject(window.CONST.DB.CARDS);
-        window.CONST.QUERY.setQuery("idx, issueType, progress, name, contents, tag, reg WHERE 1==1 ORDER -idx");
+        window.CONST.QUERY.setQuery("idx, issueType, grid, name, contents, tag, reg WHERE 1==1 ORDER -idx");
         window.CONST.DB.CARDS = window.CONST.QUERY.getResult();
         data.idx = window.CONST.DB.CARDS.length > 0 ? window.CONST.DB.CARDS[0].idx + 1 : 1;
     }
 
-    if (!data.progress && $(this).parents("section.grid").attr('class'))
-        data.progress = $(this).parents("section.grid").attr('class').replace("grid ", "");
+    if (!data.grid && $(this).parents("section.grid").attr('class'))
+        data.grid = $(this).parents("section.grid").attr('class').replace("grid ", "");
 
     data.reg = new Date(data.reg).format("yyyy-MM-dd");
 
@@ -188,17 +247,20 @@ $.fn.fitModel = function (model) {
             }
 
             if (typeof this[0][key] != model[key]) {
-                if (typeof model[key] === "number" && typeof this[0][key] === "string")
+                if (model[key] === "number" && typeof this[0][key] === "string")
                     this[0][key] = parseInt(this[0][key]);
-                if (typeof model[key] === "string" && typeof this[0][key] === "number")
+                if (model[key] === "string" && typeof this[0][key] === "number")
                     this[0][key] = this[0][key].toString();
-
-                if (typeof model[key] === "array" && typeof this[0][key] === "string")
-                    this[0][key] = this[0][key].replace(new RegExp(" ", ""), "").join(",");
-
-                if (typeof model[key] === "boolean" && typeof this[0][key] === "number")
+                if (model[key] === "array" && typeof this[0][key] === "string") {
+                    var dataString = this[0][key].replace(new RegExp(" ", ""), "");
+                    if(dataString.indexOf(",") != -1)
+                        this[0][key] = dataString.join(",");
+                    else
+                        this[0][key] = [dataString];
+                }
+                if (model[key] === "boolean" && typeof this[0][key] === "number")
                     this[0][key] = this[0][key] > 0;
-                if (typeof model[key] === "boolean" && typeof this[0][key] === "string")
+                if (model[key] === "boolean" && typeof this[0][key] === "string")
                     this[0][key] = this[0][key].toUpperCase() === "TRUE";
             }
         }
@@ -248,10 +310,15 @@ $.fn.setCount = function () {
 $.fn.backup = function () {
     $(this[0].SETTING).fitModel(window.CONST.MODEL.SETTING);
 
+    for (var idx in this[0].GRIDS)
+        $(this[0].GRIDS[idx]).fitModel(window.CONST.MODEL.GRID);
+
     for (var idx in this[0].CARDS)
         $(this[0].CARDS[idx]).fitModel(window.CONST.MODEL.CARD);
 
-    $.cookie("Database", this[0]);
+    $.cookie("DB-SETTING", this[0].SETTING);
+    $.cookie("DB-GRIDS", this[0].GRIDS);
+    $.cookie("DB-CARDS", this[0].CARDS);
 };
 
 /**
