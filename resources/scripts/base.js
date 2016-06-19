@@ -1,23 +1,23 @@
 $(function () {
-    // under IE 10 check
+    // IE 9 이하 체크
     var IsLowIE = navigator.userAgent.toLowerCase().indexOf("msie") != -1;
 
-    // jquery.cookie defaults
+    // jquery.cookie 초기 설정
     $.cookie.json = true;
     $.cookie.defaults.expires = 9999999;
 
-    // mustache pre load
+    // mustache 미리 로딩
     Mustache.parse($('#tpl-card').html());
 
-    // require
+    // 페이지 내부 스크립트는 반드시 순서대로 로딩
     $.getScript("./resources/scripts/api.js", function (data, textStatus, jqxhr) {
         if (textStatus === "success" && jqxhr.status === 200) {
             $.getScript("./resources/scripts/binder.js", function (data, textStatus, jqxhr) {
                 if (textStatus === "success" && jqxhr.status === 200) {
 
-                    // initial data set from cookie
+                    // 쿠키로부터 데이터 로드
                     if(window.CONST.DB.CARDS.length) {
-                        // order by idx
+                        // JsQuery API 로 데이터 정렬
                         window.CONST.QUERY.setObject(window.CONST.DB.CARDS);
                         window.CONST.QUERY.setQuery("idx, issueType, name, contents, tag, reg ORDER -idx");
                         window.CONST.DB.CARDS = window.CONST.QUERY.getResult();
@@ -31,7 +31,7 @@ $(function () {
                         }
                     }
 
-                    // compatibility style load
+                    // IE 9 이하 및 모바일 버전 스타일 로드
                     if(isMobile.any || IsLowIE) {
                         $.get("./resources/styles/mobile.css", function(data){
                             $("head").append("<style>"+data+"</style>");

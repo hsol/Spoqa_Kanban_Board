@@ -1,12 +1,24 @@
+/**
+ * @description 이슈생성팝업 활성화
+ * @event click
+ */
 $(".btn-issue.act-pop").on("click", function(){
     $("section.modal-group #issue-creator").removeClass("modify").addClass("create");
     $("section.modal-group").showModal("#issue-creator", true);
 });
 
-$(".modal .btn-close img").on("click", function(){
+/**
+ * @description 팝업 비활성화
+ * @event click
+ */
+$(".modal .btn-close").on("click", function(){
     $("section.modal-group").hideModal("#" + $(this).parents(".modal").attr("id"));
 });
 
+/**
+ * @description 이슈생성 버튼
+ * @event click
+ */
 $(".btn-issue.act-submit").on("click", function(){
     var article = $(this).parents(".modal").find("article.content");
     var data = $(window.CONST.MODEL.CARD).objectCopy(false);
@@ -33,7 +45,8 @@ $(".btn-issue.act-submit").on("click", function(){
 
     if($(this).hasClass("create")){
         $("section.grid.to-do ul.card-group").pushCard(data, true);
-    } else if ($(this).hasClass("modify")){
+    }
+    else if ($(this).hasClass("modify")){
         data.idx = $(this).parents(".modal").data("idx");
         $("li.card").each(function(){
             if($(this).data("idx") === data.idx){
@@ -53,9 +66,14 @@ $(".btn-issue.act-submit").on("click", function(){
         });
     }
 
+    // 팝업 비활성화
     $(this).parents(".modal").find(".btn-close img").trigger("click");
 });
 
+/**
+ * @description 이슈 필터링
+ * @event click
+ */
 $(".quick-filters .act-filter").on("click", function() {
     $(".quick-filters .act-filter").removeClass("selected");
     $(this).addClass("selected");
@@ -80,9 +98,14 @@ $(".quick-filters .act-filter").on("click", function() {
         });
     }
 
+    // 이슈 갯수 카운트
     $("section.grid").each(function(){ $(this).setCount(); });
 });
 
+/**
+ * @description 설정 레이어 활성화/비활성화 및 설정 데이터 입력
+ * @event click
+ */
 $("aside#aside .btn-settings").on("click", function(){
     if(!window.CONST.DB.SETTING)
         window.CONST.DB.SETTING = $(window.CONST.MODEL.SETTING).objectCopy(false);
@@ -91,10 +114,9 @@ $("aside#aside .btn-settings").on("click", function(){
     $("aside#aside li.setting.AUTO_BACKUP img.switch").attr("src", window.CONST.DB.SETTING.AUTO_BACKUP ? window.CONST.SWITCH_IMG.on : window.CONST.SWITCH_IMG.off);
     $("aside#aside li.setting.AUTO_BACKUP_TIME input").val(window.CONST.DB.SETTING.AUTO_BACKUP_TIME || 30);
 
-    var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.CONST.DB));
-    $("aside#aside li.setting .act-archive").attr("href", "data:" + data);
-
     if($(this).hasClass("unfold")){
+        $("body").css("overflow", "hidden");
+
         $(this).parents("aside#aside").animate({
             right: 0
         }, 500, function(){
@@ -102,6 +124,8 @@ $("aside#aside .btn-settings").on("click", function(){
             $(this).css("overflow-y", "auto");
         });
     } else if ($(this).hasClass("fold")) {
+        $("body").css("overflow", "auto");
+
         $(this).parents("aside#aside").animate({
             right: -($(window).innerWidth())
         }, 500, function(){
@@ -111,6 +135,10 @@ $("aside#aside .btn-settings").on("click", function(){
     }
 });
 
+/**
+ * @description 스위치형 설정
+ * @event click
+ */
 $("aside#aside li.setting .values img.switch").on("click", function() {   
     var key = $(this).parents("li.setting").attr("class").replace("setting ", "").trim();
     if($(this).hasClass("on")) {
@@ -125,19 +153,42 @@ $("aside#aside li.setting .values img.switch").on("click", function() {
         $(this).attr("src", window.CONST.SWITCH_IMG.on);
     }
 
-    initialization();
+    initSettings();
 });
+
+/**
+ * @description 텍스트형 설정
+ * @event click
+ */
 $("aside#aside li.setting .values input[type=text]").on("change", function() {
     var key = $(this).parents("li.setting").attr("class").replace("setting ", "");
     window.CONST.DB.SETTING[key] = $(this).val();
 
-    initialization();
+    initSettings();
 });
+
+/**
+ * @description 다운로드 버튼, download api
+ * @event click
+ */
+$("aside#aside li.setting .act-archive").on("click", function(){
+    var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.CONST.DB));
+    download("data:" + data, "spoqa_kanban_board_" + new Date().format("yyyy.MM.dd.HH.mm.ss") + ".json", "text/json");
+});
+
+/**
+ * @description 업로드 버튼, file 태그 활용
+ * @event click
+ */
 $("aside#aside li.setting .act-restore").on("click", function(){
     var evt = document.createEvent("MouseEvents");
     evt.initEvent("click", true, false);
     $("input[type=file][name=archive]")[0].dispatchEvent(evt);
 });
+/**
+ * @description 데이터베이스 복구 로직. 복구 시 덮어쓰기
+ * @event change
+ */
 $("aside#aside li.setting .values input[type=file]").on("change", function(event) {
     if($(this).val()) {
         var extension = $(this).val().replace(/^.*\./, '');
@@ -160,6 +211,10 @@ $("aside#aside li.setting .values input[type=file]").on("change", function(event
     }
 });
 
+/**
+ * @description 카드 클릭 시 수정.
+ * @event click
+ */
 $(document).on("click", "li.card section.info", function(event){
     if($(event.target).hasClass("btn-remove") || $(event.target).parent().hasClass("btn-remove"))
         return false;
@@ -175,6 +230,10 @@ $(document).on("click", "li.card section.info", function(event){
     $("section.modal-group").showModal("#issue-creator", false);
 });
 
+/**
+ * @description 카드 삭제
+ * @event click
+ */
 $(document).on("click", "li.card .btn-remove", function(){
     var issueIdx = $(this).parents("li.card").data("idx");
     var count = $(this).parents("section.grid").find("span.count");
@@ -188,6 +247,11 @@ $(document).on("click", "li.card .btn-remove", function(){
     });
 });
 
+
+/**
+ * @description custome select 구현
+ * @event change
+ */
 $(".select_box select").on("change", function () {
     var selectLabel = $(this).parents(".select_box").find("label[for=issue-type]");
     selectLabel.text($(this).find("option:selected").text());
@@ -203,6 +267,11 @@ $(".select_box select").on("change", function () {
     }
 });
 
+
+/**
+ * @description jquery ui 활용 카드 드래그 구현
+ * @event draggable, droppable, sortable
+ */
 $("section.grid ul.card-group li.card").draggable({
     connectToSortable: ".card-group",
     helper: "original",
