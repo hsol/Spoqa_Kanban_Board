@@ -1,6 +1,9 @@
 $(function () {
-    var IsLowIE = navigator.userAgent.toLowerCase().indexOf("msie") != -1;
+    var isIE = navigator.userAgent.toLowerCase().indexOf('msie');
+    var ieVer = (isIE != -1) ? parseInt(navigator.userAgent.toLowerCase().split('msie')[1]) : 11;
+
     window.CONST = {
+        IE_VER: ieVer,
         SECRET_MODE: false,
         AUTO_BACKUP: true,
         AUTO_BACKUP_TIME: 30,
@@ -10,8 +13,8 @@ $(function () {
             def: "Defect"
         },
         ISSUE_TYPE_IMG: {
-            imp: "./resources/images/" + (IsLowIE ? "icn_improvement.png" : "icn_improvement.svg"),
-            def: "./resources/images/" + (IsLowIE ? "icn_defect.png" : "icn_defect.svg")
+            imp: "./resources/images/" + (ieVer <= 9 ? "icn_improvement.png" : "icn_improvement.svg"),
+            def: "./resources/images/" + (ieVer <= 9 ? "icn_defect.png" : "icn_defect.svg")
         },
 
         SWITCH_IMG: {

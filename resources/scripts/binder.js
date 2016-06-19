@@ -200,6 +200,7 @@ $("aside#aside li.setting .values input[type=file]").on("change", function(event
                     window.CONST.DB = JSON.parse(fileReader.result);
                     alert("load completed.");
 
+                    $(window.CONST.DB).backup();
                     window.location.reload();
                 };
                 fileReader.readAsText(file);
@@ -284,10 +285,11 @@ $("section.grid ul.card-group").droppable({
 
         for(var idx in window.CONST.DB.CARDS){
             var card = window.CONST.DB.CARDS[idx];
-            if(card.idx === issueIdx)
+            if(card.idx === issueIdx) {
                 card.progress = progress;
+            }
         }
-
+        ;
         $("section.grid").each(function(){ $(this).setCount(); });
     }
 }).sortable({
