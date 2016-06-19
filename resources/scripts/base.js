@@ -1,6 +1,6 @@
 $(function () {
     // IE 9 이하 체크
-    var IsLowIE = navigator.userAgent.toLowerCase().indexOf("msie") != -1;
+    var isLowIE = navigator.userAgent.toLowerCase().indexOf("msie") != -1;
 
     // jquery.cookie 초기 설정
     $.cookie.json = true;
@@ -32,8 +32,12 @@ $(function () {
                     }
 
                     // IE 9 이하 및 모바일 버전 스타일 로드
-                    if(isMobile.any || IsLowIE) {
+                    if(isMobile.any) {
                         $.get("./resources/styles/mobile.css", function(data){
+                            $("head").append("<style>"+data+"</style>");
+                        });
+                    } else if (isLowIE){
+                        $.get("./resources/styles/low_ie.css", function(data){
                             $("head").append("<style>"+data+"</style>");
                         });
                     }
@@ -46,6 +50,7 @@ $(function () {
         }
     });
 
+    $(window).on("load", function () { uiFixer(); });
     $(window).on("resize", function () { uiFixer(); });
     $(window).on("scroll", function () { uiFixer(); });
     $(window).on("beforeunload", function() {
