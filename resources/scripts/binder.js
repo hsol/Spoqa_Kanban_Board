@@ -109,6 +109,7 @@ $(".btn-issue.act-submit").on("click", function(){
                 }
 
                 $(this).attr("class", "card " + data.issueType);
+                $(this).attr("data-type", data.issueType);
                 $(this).attr("data-tag", data.tag);
                 $(this).find(".btn-group img").attr("src", window.CONST.ISSUE_TYPE_IMG[data.issueType]);
                 $(this).find("header.title").text(data.name);
@@ -277,12 +278,12 @@ $(document).on("click", "li.card section.info", function(event){
     if($(event.target).hasClass("btn-remove") || $(event.target).parent().hasClass("btn-remove"))
         return false;
 
-    var issueType = $(this).parents("li.card").attr('class').replace("card ", "");
+    var issueType = $(this).parents("li.card").data("type");
     $("section.modal-group #issue-creator").removeClass("create").addClass("modify");
-    $("section.modal-group #issue-creator").attr("data-idx", $(this).parents("li.card").data("idx"));
+    $("section.modal-group #issue-creator").attr("data-idx", $(this).parents("li.card").attr("data-idx"));
     $("section.modal-group #issue-creator input[name=issue-name]").val($(this).find("header.title").text());
     $("section.modal-group #issue-creator input[name=issue-contents]").val($(this).find("article.content").text());
-    $("section.modal-group #issue-creator input[name=issue-tag]").val($(this).parents("li.card").data("tag"));
+    $("section.modal-group #issue-creator input[name=issue-tag]").val($(this).parents("li.card").attr("data-tag"));
     $("section.modal-group #issue-creator .select_box label").attr("class", "type-" + issueType).text(window.CONST.ISSUE_TYPE[issueType]);
     $("section.modal-group #issue-creator select[name=issue-type]").val(issueType);
     $("section.modal-group").showModal("#issue-creator", false);
