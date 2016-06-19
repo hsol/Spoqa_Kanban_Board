@@ -6,6 +6,14 @@ $(".btn-issue.act-pop").on("click", function(){
     $("section.modal-group #issue-creator").removeClass("modify").addClass("create");
     $("section.modal-group").showModal("#issue-creator", true);
 });
+/**
+ * @description 그리드생성팝업 활성화
+ * @event click
+ */
+$(".btn-grid.act-pop").on("click", function(){
+    $("section.modal-group #grid-creator").removeClass("modify").addClass("create");
+    $("section.modal-group").showModal("#grid-creator", true);
+});
 
 /**
  * @description 팝업 비활성화
@@ -15,17 +23,61 @@ $(".modal .btn-close").on("click", function(){
     $("section.modal-group").hideModal("#" + $(this).parents(".modal").attr("id"));
 });
 
+$(".btn-grid.act-submit").on("click", function(){
+    var isExist = false;
+    if(window.CONST.DB.GRIDS.length <= 3) {
+        var article = $(this).parents(".modal").find("article.content");
+        var data = $(window.CONST.MODEL.GRID).objectCopy(false);
+
+        data.sequence = article.find("[name=grid-sequence]").val();
+        data.title = article.find("[name=grid-title]").val();
+        data.selector = article.find("[name=grid-selector]").val();
+
+        if(!data.sequence){
+            alert("Please select grid sequence.");
+            return false;
+        }
+        if(!data.title) {
+            alert("Please insert grid title.");
+            return false;
+        }
+        if(!data.selector) {
+            alert("Please insert grid selector.");
+            return false;
+        }
+
+        for(var idx in window.CONST.DB.GRIDS){
+            if(data.selector === window.CONST.DB.GRIDS[idx].selector) {
+                alert("Already same grid selector exists.");
+                isExist = true;
+            }
+        }
+
+        if(!isExist)
+            $("section#article").pushGrid(data, true);
+    } else {
+        alert("Grid can not create more than four.");
+        return;
+    }
+
+    window.location.reload();
+});
+
 /**
  * @description 이슈생성 버튼
  * @event click
  */
 $(".btn-issue.act-submit").on("click", function(){
+    if(window.CONST.DB.GRIDS.length <= 0) {
+        alert("Please create grid first.");
+        return false;
+    }
     var article = $(this).parents(".modal").find("article.content");
     var data = $(window.CONST.MODEL.CARD).objectCopy(false);
 
     data.issueType = article.find("[name=issue-type]").val();
     data.name = article.find("[name=issue-name]").val();
-    data.progress = "to-do";
+    data.grid = $("section.grid:first-child").attr("class").replace("grid ", "").trim();
     data.contents = article.find("[name=issue-contents]").val();
     data.tag = article.find("[name=issue-tag]").val();
     data.reg = new Date();
@@ -44,7 +96,7 @@ $(".btn-issue.act-submit").on("click", function(){
     }
 
     if($(this).hasClass("create")){
-        $("section.grid.to-do ul.card-group").pushCard(data, true);
+        $("section.grid:first-child  ul.card-group").pushCard(data, true);
     }
     else if ($(this).hasClass("modify")){
         data.idx = $(this).parents(".modal").data("idx");
@@ -139,7 +191,7 @@ $("aside#aside .btn-settings").on("click", function(){
  * @description 스위치형 설정
  * @event click
  */
-$("aside#aside li.setting .values img.switch").on("click", function() {   
+$("aside#aside li.setting .values img.switch").on("click", function() {
     var key = $(this).parents("li.setting").attr("class").replace("setting ", "").trim();
     if($(this).hasClass("on")) {
         window.CONST.DB.SETTING[key] = false;
@@ -154,6 +206,11 @@ $("aside#aside li.setting .values img.switch").on("click", function() {
     }
 
     initSettings();
+});
+
+$(document).on("click", "section.grid header.grid-head img", function() {
+    var parent = $(this).parents("section.grid");
+    parent.removeGrid();
 });
 
 /**
@@ -268,33 +325,34 @@ $(".select_box select").on("change", function () {
     }
 });
 
+$.excuteDraggable = function() {
+    /**
+     * @description jquery ui 활용 카드 드래그 구현
+     * @event draggable, droppable, sortable
+     */
+    $("section.grid ul.card-group li.card").draggable({
+        connectToSortable: ".card-group",
+        helper: "original",
+        revert: "invalid"
+    });
+    $("section.grid ul.card-group").droppable({
+        drop: function( event, ui ) {
+            var issueIdx = $(ui.draggable[0]).data("idx");
+            var grid = $(this).parents("section.grid").attr('class').replace("grid ", "");
 
-/**
- * @description jquery ui 활용 카드 드래그 구현
- * @event draggable, droppable, sortable
- */
-$("section.grid ul.card-group li.card").draggable({
-    connectToSortable: ".card-group",
-    helper: "original",
-    revert: "invalid"
-});
-$("section.grid ul.card-group").droppable({
-    drop: function( event, ui ) {
-        var issueIdx = $(ui.draggable[0]).data("idx");
-        var progress = $(this).parents("section.grid").attr('class').replace("grid ", "");
-
-        for(var idx in window.CONST.DB.CARDS){
-            var card = window.CONST.DB.CARDS[idx];
-            if(card.idx === issueIdx) {
-                card.progress = progress;
+            for(var idx in window.CONST.DB.CARDS){
+                var card = window.CONST.DB.CARDS[idx];
+                if(card.idx === issueIdx) {
+                    card.grid = grid;
+                }
             }
+            ;
+            $("section.grid").each(function(){ $(this).setCount(); });
         }
-        ;
-        $("section.grid").each(function(){ $(this).setCount(); });
-    }
-}).sortable({
-    connectWith: ".card-group",
-    handle: isMobile.any ? ".btn-group" : "",
-    cursor: "move",
-    revert: true
-});
+    }).sortable({
+        connectWith: ".card-group",
+        handle: isMobile.any ? ".btn-group" : "",
+        cursor: "move",
+        revert: true
+    });
+};

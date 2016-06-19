@@ -5,27 +5,40 @@ $(function () {
 
     // mustache 미리 로딩
     Mustache.parse($('#tpl-card').html());
+    Mustache.parse($('#tpl-grid').html());
 
     // 페이지 내부 스크립트는 반드시 순서대로 로딩
     $.getScript("./resources/scripts/api.js", function (data, textStatus, jqxhr) {
         if (textStatus === "success" && jqxhr.status === 200) {
             $.getScript("./resources/scripts/binder.js", function (data, textStatus, jqxhr) {
                 if (textStatus === "success" && jqxhr.status === 200) {
-
                     // 쿠키로부터 데이터 로드
-                    if(window.CONST.DB.CARDS.length) {
+                    if(window.CONST.DB) {
+                        // JsQuery API 로 데이터 정렬
+                        window.CONST.QUERY.setObject(window.CONST.DB.GRIDS);
+                        window.CONST.QUERY.setQuery("sequence, selector, title ORDER sequence");
+                        window.CONST.DB.GRIDS = window.CONST.QUERY.getResult();
+                        for(var idx in window.CONST.DB.GRIDS) {
+                            var data = window.CONST.DB.GRIDS[idx];
+                            if (data) {
+                                if (data.selector)
+                                    $("section#article").pushGrid(data);
+                            }
+                        }
+
                         // JsQuery API 로 데이터 정렬
                         window.CONST.QUERY.setObject(window.CONST.DB.CARDS);
                         window.CONST.QUERY.setQuery("idx, issueType, name, contents, tag, reg ORDER -idx");
                         window.CONST.DB.CARDS = window.CONST.QUERY.getResult();
-
                         for (var idx in window.CONST.DB.CARDS) {
                             var data = window.CONST.DB.CARDS[idx];
                             if (data) {
-                                if (data.progress)
-                                    $("section.grid." + data.progress + " ul.card-group").pushCard(data);
+                                if (data.grid)
+                                    $("section.grid." + data.grid + " ul.card-group").pushCard(data);
                             }
                         }
+
+                        $.excuteDraggable();
                     }
 
                     // IE 9 이하 및 모바일 버전 스타일 로드

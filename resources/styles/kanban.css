@@ -232,6 +232,7 @@ section#article section.grid {
 }
 
 section#article section.grid header.grid-head {
+    position:relative;
     width:100%;
     padding-bottom:1em;
 }
@@ -246,6 +247,13 @@ section#article section.grid header.grid-head label {
     padding-left:0.5em;
     overflow:hidden;
     text-overflow:ellipsis;
+}
+section#article section.grid header.grid-head img {
+    position:absolute;
+    cursor:pointer;
+    height:0.85em;
+    top:0.3em;
+    right:0.15em;
 }
 
 section#article section.grid article.grid-body {
@@ -507,8 +515,6 @@ aside#aside article ul.settings li.setting.ARCHIVE .values input[type=file][name
         height:0.9em;
     }
     section#article section.grid { padding-bottom:1.2em; }
-}
-@media only screen and (max-width:480px ) {
     header#header .layout-left {
         display:block;
         width:100%;
@@ -516,9 +522,15 @@ aside#aside article ul.settings li.setting.ARCHIVE .values input[type=file][name
     header#header .layout-right {
         position:static;
         width:100%;
+        font-size:0;
     }
     header#header .layout-right .spoqa-btn {
-        width:100%;
+        font-size:1rem;
+        display:inline-block;
+        width:49.2%;
+        margin-left:0.2%;
+        margin-right:0.2%;
+        margin-bottom:0.5em;
     }
 }
 
@@ -542,6 +554,13 @@ aside#aside article ul.settings li.setting.ARCHIVE .values input[type=file][name
         margin-bottom:-4em;
         left:-4em;
     }
+    header#header .layout-right .spoqa-btn {
+         display:block;
+         width:100%;
+         margin-left:0;
+         margin-right:0;
+         margin-bottom:0.5em;
+     }
 }
 
 @media only screen and (max-width:375px ) {
