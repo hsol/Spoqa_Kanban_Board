@@ -1,7 +1,4 @@
 $(function () {
-    // IE 9 이하 체크
-    var isLowIE = navigator.userAgent.toLowerCase().indexOf("msie") != -1;
-
     // jquery.cookie 초기 설정
     $.cookie.json = true;
     $.cookie.defaults.expires = 9999999;
@@ -36,7 +33,7 @@ $(function () {
                         $.get("./resources/styles/mobile.css", function(data){
                             $("head").append("<style>"+data+"</style>");
                         });
-                    } else if (isLowIE){
+                    } else if (window.CONST.IE_VER <= 9){
                         $.get("./resources/styles/low_ie.css", function(data){
                             $("head").append("<style>"+data+"</style>");
                         });
