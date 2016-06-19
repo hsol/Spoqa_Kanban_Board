@@ -294,15 +294,15 @@ $(document).on("click", "li.card section.info", function(event){
  */
 $(document).on("click", "li.card .btn-remove", function(){
     var issueIdx = $(this).parents("li.card").data("idx");
-    var count = $(this).parents("section.grid").find("span.count");
 
-    $(this).parents("li.card").fadeOut( 300, function () {
-        window.CONST.QUERY.setObject(window.CONST.DB.CARDS);
-        window.CONST.QUERY.setQuery("idx, issueType, name, grid, contents, tag, reg WHERE idx != " + issueIdx + " ORDER -idx");
-        window.CONST.DB.CARDS = window.CONST.QUERY.getResult();
+    $(this).parents("li.card").remove();
 
-        $(this).parents("li.card").remove();
-    });
+    window.CONST.QUERY.setObject(window.CONST.DB.CARDS);
+    window.CONST.QUERY.setQuery("idx, issueType, name, grid, contents, tag, reg WHERE idx != " + issueIdx + " ORDER -idx");
+    window.CONST.DB.CARDS = window.CONST.QUERY.getResult();
+
+    // 이슈 갯수 카운트
+    $("section.grid").each(function(){ $(this).setCount(); });
 });
 
 
