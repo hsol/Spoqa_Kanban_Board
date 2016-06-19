@@ -25,6 +25,7 @@ section.modal-group {
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#80000000,endColorstr=#80000000);
     padding:1em;
     overflow-y: auto;
+    z-index:10;
 }
 
 section.modal-group .modal {
@@ -49,6 +50,11 @@ section.modal-group .modal .btn-close {
 }
 section.modal-group .modal .btn-close img { max-width:100%; width:100%; }
 section.modal-group .modal .btn-close img:hover { cursor:pointer }
+
+section.modal-group .modal .modify,
+section.modal-group .modal .create { display:none; }
+section.modal-group .modal.create .create,
+section.modal-group .modal.modify .modify { display:block; }
 section.modal-group .modal header.title { width:100%; padding-bottom:2em; }
 section.modal-group .modal header.title h1 {
     width:100%;
@@ -80,6 +86,7 @@ section.modal-group .modal article.content .issue-type label{
 }
 section.modal-group .modal article.content .issue-text input,
 section.modal-group .modal article.content .issue-type .select_box {
+    position:relative;
     display:block;
     width:100%;
 
@@ -91,20 +98,21 @@ section.modal-group .modal article.content .issue-type .select_box {
     display:inline-block;
     position:relative;
     background: url('../images/icn_arrow_down.png') 95% center no-repeat;
+    background-image:url('../images/icn_arrow_down_ie.png')\9;
     background-size:1.3em auto;
 }
 section.modal-group .modal article.content .issue-type .select_box:hover { cursor:pointer }
 section.modal-group .modal article.content .issue-type .select_box label {
-    position: absolute;
     width:100%;
     font-size:0.9em;
     font-weight:400;
-    top: 1.25em;
+    margin-bottom:0;
 }
 section.modal-group .modal article.content .issue-type .select_box label.type-imp {
     padding-left:2em;
     padding-bottom: 0;
     background-image:url('../images/icn_improvement.png');
+    background-image:url('../images/icn_improvement_ie.png')\9;
     background-size:1.15em 1.1em;
     background-repeat:no-repeat;
     background-position: 0 0.1em;
@@ -113,13 +121,18 @@ section.modal-group .modal article.content .issue-type .select_box label.type-de
     padding-left:2em;
     padding-bottom: 0;
     background-image:url('../images/icn_defect.png');
+    background-image:url('../images/icn_defect_ie.png')\9;
     background-size:1.15em 1.1em;
     background-repeat:no-repeat;
     background-position: 0 0.1em;
 }
 
 section.modal-group .modal article.content .issue-type .select_box select {
+    position:absolute;
+    top:0;
+    left:0;
     width: 100%;
+    height:6em;
     font-size:0.5em;
     padding: 0 1em;
     opacity: 0;
@@ -127,6 +140,12 @@ section.modal-group .modal article.content .issue-type .select_box select {
 }
 section.modal-group .modal article.content .issue-type .select_box select option { font-size:1.8em; }
 section.modal-group .modal article.content .issue-type .select_box select:hover { cursor:pointer }
+
+::i-block-chrome, section.modal-group .modal article.content .issue-type .select_box select {
+    font-size:1em;
+    top:1em;
+}
+
 section.modal-group .modal footer.submit { width:100%; padding-bottom:1em; }
 section.modal-group .modal footer.submit button { width:100%; }
 
@@ -175,6 +194,7 @@ header#header .layout-left .quick-filters ul li {
     padding-right:0.5em;
 }
 header#header .layout-left .quick-filters ul li:hover { cursor:pointer; }
+header#header .layout-left .quick-filters ul li.selected { color:#2c5ae9; }
 
 header .layout-right {
     position:absolute;
@@ -193,6 +213,10 @@ section#article section.grid {
 
     padding:1em 1em 3em 1em;
     vertical-align: top;
+}
+
+::i-block-chrome, section#article section.grid {
+    width:24.6%;
 }
 
 section#article section.grid header.grid-head {
@@ -249,9 +273,6 @@ section#article section.grid article.grid-body ul.card-group li.card {
     -moz-box-shadow: 0 1px 32px -18px rgba(0,0,0,0.64);
     box-shadow: 0 1px 32px -18px rgba(0,0,0,0.64);
 }
-section#article section.grid article.grid-body ul.card-group:hover li.card {
-    cursor:move;
-}
 section#article section.grid article.grid-body ul.card-group li.card:last-child {
     margin-bottom:0;
 }
@@ -269,12 +290,15 @@ section#article section.grid article.grid-body:after {
     box-shadow: inset 0 -34px 24px -44px rgba(0,0,0,0.45);
 }
 section#article section.grid article.grid-body ul.card-group li.card section.btn-group {
+    cursor:move;
     position:absolute;
     top:0;
     left:0;
     width:2.5em;
     padding:0.9em 0.8em;
+    z-index:2;
 }
+section#article section.grid article.grid-body ul.card-group li.card section.btn-group:active { padding:0.8em 0.7em; }
 section#article section.grid article.grid-body ul.card-group li.card section.btn-group img {
     max-width:100%;
     width:100%;
@@ -288,6 +312,7 @@ section#article section.grid article.grid-body ul.card-group li.card:hover secti
     transition-duration:0.6s;
 }
 section#article section.grid article.grid-body ul.card-group li.card section.info {
+    cursor:pointer;
     position:relative;
     padding:0.8em 0.8em 1.5em 2.5em;
 }
@@ -340,6 +365,9 @@ section#article section.grid article.grid-body ul.card-group li.card section.inf
     section#article section.grid {
         width:50%;
         height:50%;
+    }
+    ::i-block-chrome, section#article section.grid {
+        width:49.5%;
     }
 }
 
