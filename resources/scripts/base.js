@@ -28,7 +28,7 @@ $(function () {
 
                         // JsQuery API 로 데이터 정렬
                         window.CONST.QUERY.setObject(window.CONST.DB.CARDS);
-                        window.CONST.QUERY.setQuery("idx, issueType, name, contents, tag, reg ORDER -idx");
+                        window.CONST.QUERY.setQuery("idx, issueType, grid, name, contents, tag, reg ORDER -idx");
                         window.CONST.DB.CARDS = window.CONST.QUERY.getResult();
                         for (var idx in window.CONST.DB.CARDS) {
                             var data = window.CONST.DB.CARDS[idx];

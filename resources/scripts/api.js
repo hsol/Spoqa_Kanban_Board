@@ -254,7 +254,7 @@ $.fn.fitModel = function (model) {
                 if (model[key] === "array" && typeof this[0][key] === "string") {
                     var dataString = this[0][key].replace(new RegExp(" ", ""), "");
                     if(dataString.indexOf(",") != -1)
-                        this[0][key] = dataString.join(",");
+                        this[0][key] = dataString.split(",");
                     else
                         this[0][key] = [dataString];
                 }
