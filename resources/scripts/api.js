@@ -56,6 +56,7 @@ function initSettings() {
     if (window.CONST.DB.SETTING ? window.CONST.DB.SETTING.SECRET_MODE : window.CONST.SECRET_MODE)
         $.removeCookie("Database");
     else {
+        $(window.CONST.DB).backup();
         if (window.CONST.DB.SETTING ? window.CONST.DB.SETTING.AUTO_BACKUP : window.CONST.AUTO_BACKUP) {
             window.CONST.INTERVAL = setInterval(function () {
                 console.log("[" + new Date() + "] Run auto backup.");
