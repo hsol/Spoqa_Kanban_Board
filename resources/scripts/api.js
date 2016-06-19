@@ -56,12 +56,17 @@ function initSettings() {
     if (window.CONST.DB.SETTING ? window.CONST.DB.SETTING.SECRET_MODE : window.CONST.SECRET_MODE)
         $.removeCookie("Database");
     else {
-        $(window.CONST.DB).backup();
         if (window.CONST.DB.SETTING ? window.CONST.DB.SETTING.AUTO_BACKUP : window.CONST.AUTO_BACKUP) {
             window.CONST.INTERVAL = setInterval(function () {
                 console.log("[" + new Date() + "] Run auto backup.");
                 $(window.CONST.DB).backup();
             }, 1000 * (window.CONST.DB.SETTING ? (window.CONST.DB.SETTING.AUTO_BACKUP_TIME >= 1 ? window.CONST.DB.SETTING.AUTO_BACKUP_TIME : 1) : window.CONST.AUTO_BACKUP_TIME));
+        } else {
+            if(window.CONST.DB) {
+               setTimeout(function(){
+                   $(window.CONST.DB).backup();
+               },0);
+            }
         }
     }
 }
