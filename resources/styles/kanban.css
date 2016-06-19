@@ -1,3 +1,4 @@
+/* Page Style */
 .clear:after {
     display:block;
     content:"";
@@ -98,7 +99,10 @@ section.modal-group .modal article.content .issue-type .select_box {
     display:inline-block;
     position:relative;
     background: url('../images/icn_arrow_down.png') 95% center no-repeat;
+
+    /* ie8 compatibility patch */
     background-image:url('../images/icn_arrow_down_ie.png')\9;
+
     background-size:1.3em auto;
 }
 section.modal-group .modal article.content .issue-type .select_box:hover { cursor:pointer }
@@ -112,7 +116,10 @@ section.modal-group .modal article.content .issue-type .select_box label.type-im
     padding-left:2em;
     padding-bottom: 0;
     background-image:url('../images/icn_improvement.png');
+
+    /* ie8 compatibility patch */
     background-image:url('../images/icn_improvement_ie.png')\9;
+
     background-size:1.15em 1.1em;
     background-repeat:no-repeat;
     background-position: 0 0.1em;
@@ -121,7 +128,10 @@ section.modal-group .modal article.content .issue-type .select_box label.type-de
     padding-left:2em;
     padding-bottom: 0;
     background-image:url('../images/icn_defect.png');
+
+    /* ie8 compatibility patch */
     background-image:url('../images/icn_defect_ie.png')\9;
+
     background-size:1.15em 1.1em;
     background-repeat:no-repeat;
     background-position: 0 0.1em;
@@ -141,6 +151,7 @@ section.modal-group .modal article.content .issue-type .select_box select {
 section.modal-group .modal article.content .issue-type .select_box select option { font-size:1.8em; }
 section.modal-group .modal article.content .issue-type .select_box select:hover { cursor:pointer }
 
+/* safari compatibility patch */
 ::i-block-chrome, section.modal-group .modal article.content .issue-type .select_box select {
     font-size:1em;
     top:1em;
@@ -215,6 +226,7 @@ section#article section.grid {
     vertical-align: top;
 }
 
+/* safari compatibility patch */
 ::i-block-chrome, section#article section.grid {
     width:24.6%;
 }
@@ -338,6 +350,111 @@ section#article section.grid article.grid-body ul.card-group li.card section.inf
     color:#a9afb3;
 }
 
+aside#aside {
+    background-color:#FFFFFF;
+    position:fixed;
+    top:0;
+    right:-100%;
+    width:100%;
+    height:100%;
+
+    -webkit-box-shadow: -2px 0px 1px 0px rgba(0,0,0,0.17);
+    -moz-box-shadow: -2px 0px 1px 0px rgba(0,0,0,0.17);
+    box-shadow: -2px 0px 1px 0px rgba(0,0,0,0.17);
+
+    z-index:9;
+}
+aside#aside section.btn-settings.unfold {
+    position:relative;
+    width:3em;
+    height:3em;
+
+    padding:0.5em;
+
+    margin-bottom:-3em;
+    top:0;
+    left:-3.5em;
+}
+aside#aside section.btn-settings img { max-width:100%; width:100%; cursor:pointer; }
+aside#aside header {
+    position:relative;
+    padding:2.3em;
+    background-color:#4c80f1;
+}
+aside#aside header .brand-logo {
+    font-size:0.85em;
+    padding-bottom:0.1em;
+    color:#f8fafb;
+}
+aside#aside header .page-title {
+    font-size:1.45em;
+    color:#FFFFFF;
+}
+aside#aside header .btn-settings.fold {
+    position:absolute;
+    top:2.9em;
+    right: 2.3em;
+    width:2em;
+    height: 2em;
+}
+aside#aside header .btn-settings.fold img { max-width:100%; width:100%; cursor:pointer; }
+aside#aside article {
+    position:relative;
+    padding:2.3em;
+}
+aside#aside article ul.settings { list-style:none; padding-bottom:3em; }
+aside#aside article ul.settings li.setting {
+    margin:0;
+    padding:0 0 2em 0;
+}
+aside#aside article ul.settings li.setting h1 {
+    margin:0;
+    font-size:1.5em;
+    font-weight:700;
+}
+aside#aside article ul.settings li.setting .values {
+    display:inline-block;
+    height:3em;
+    margin:0;
+    padding:0.8em 0;
+}
+aside#aside article ul.settings li.setting.AUTO_BACKUP_TIME .values {
+    height:auto;
+}
+aside#aside article ul.settings li.setting .values label {
+    vertical-align:top;
+    font-size:1.05em;
+}
+aside#aside article ul.settings li.setting .values img {
+    padding-left:0.3em;
+    padding-right:0.3em;
+
+    cursor:pointer;
+
+    vertical-align:top;
+    max-width:100%;
+    height:100%;
+}
+aside#aside article ul.settings li.setting .values input {
+    padding:1em;
+
+    border:1px solid #e1e4e6;
+    border-radius:3px;
+}
+aside#aside article ul.settings li.setting .values input ~ label {
+    vertical-align:middle;
+    font-size:1em;
+    padding-top:0.5em;
+    padding-left:0.5em;
+}
+aside#aside article ul.settings li.setting.ARCHIVE .values { padding-top:1.3em; height:auto; }
+aside#aside article ul.settings li.setting.ARCHIVE .values .spoqa-btn {
+    margin-right:1em;
+    margin-bottom:1em;
+}
+aside#aside article ul.settings li.setting.ARCHIVE .values input[type=file][name=archive] { display:none; }
+
+
 @media only screen and (max-width:1440px ) {
     .w_1440 { display:block; }
     .w_1440_h { display:none; }
@@ -366,6 +483,7 @@ section#article section.grid article.grid-body ul.card-group li.card section.inf
         width:50%;
         height:50%;
     }
+    /* safari compatibility patch */
     ::i-block-chrome, section#article section.grid {
         width:49.5%;
     }
@@ -408,12 +526,35 @@ section#article section.grid article.grid-body ul.card-group li.card section.inf
     * {	font-size:11pt; }
     .w_425 { display:block; }
     .w_425_h { display:none; }
+
+    aside#aside article ul.settings { padding-bottom:1em; }
+    aside#aside article .spoqa-btn {
+        float:none;
+        padding-left:0;
+        padding-right:0;
+        width:100%;
+    }
+    aside#aside section.btn-settings.unfold {
+        width: 4em;
+        height: 4em;
+        padding: 1em;
+
+        margin-bottom:-4em;
+        left:-4em;
+    }
 }
 
 @media only screen and (max-width:375px ) {
     * {	font-size:10pt; }
     .w_375 { display:block; }
     .w_375_h { display:none; }
+
+    aside#aside article ul.settings li.setting.ARCHIVE .values { width:100%; }
+    aside#aside article ul.settings li.setting .values .spoqa-btn {
+        width:100%;
+        margin-right:0;
+        margin-bottom:1em;
+    }
 }
 
 @media only screen and (max-width:320px ) {

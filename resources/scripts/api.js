@@ -2,6 +2,8 @@ $(function () {
     var IsLowIE = navigator.userAgent.toLowerCase().indexOf("msie") != -1;
     window.CONST = {
         SECRET_MODE: false,
+        AUTO_BACKUP: true,
+        AUTO_BACKUP_TIME: 30,
         ISSUE_TYPE: {
             imp: "Improvement",
             def: "Defect"
@@ -10,7 +12,16 @@ $(function () {
             imp: "./resources/images/" + (IsLowIE ? "icn_improvement.png" : "icn_improvement.svg"),
             def: "./resources/images/" + (IsLowIE ? "icn_defect.png" : "icn_defect.svg")
         },
+        SWITCH_IMG: {
+            on: "./resources/images/icn_switch_on.png",
+            off: "./resources/images/icn_switch_off.png"
+        },
         MODEL: {
+            SETTING: {
+                SECRET_MODE: "boolean",
+                AUTO_BACKUP: "boolean",
+                AUTO_BACKUP_TIME: "number"
+            },
             CARD: {
                 idx: "number",
                 progress: "string",
@@ -21,15 +32,30 @@ $(function () {
                 reg: "object"
             }
         },
-        DB: $.cookie("Database") || {
+        DB: {
             CARDS: []
         },
         QUERY: new JsQuery()
     };
+    window.CONST.DB = $.extend(window.CONST.DB, $.cookie("Database"));
 
-    if(CONST.SECRET_MODE)
-        $.removeCookie("DB");
+    initialization();
 });
+
+function initialization() {
+    clearInterval(window.CONST.INTERVAL);
+
+    if(window.CONST.DB.SETTING ? window.CONST.DB.SETTING.SECRET_MODE : window.CONST.SECRET_MODE)
+        $.removeCookie("Database");
+    else {
+        if(window.CONST.DB.SETTING ? window.CONST.DB.SETTING.AUTO_BACKUP : window.CONST.AUTO_BACKUP){
+            window.CONST.INTERVAL = setInterval(function(){
+                console.log("[" + new Date() + "] Run auto backup.");
+                $(window.CONST.DB).backup();
+            }, 1000 * (window.CONST.DB.SETTING ? (window.CONST.DB.SETTING.AUTO_BACKUP_TIME >= 1 ? window.CONST.DB.SETTING.AUTO_BACKUP_TIME : 1) : window.CONST.AUTO_BACKUP_TIME));
+        }
+    }
+}
 
 $.fn.showModal = function (selector, clearState) {
     if (selector) {
@@ -121,10 +147,10 @@ $.fn.fitModel = function (model) {
     return this[0];
 };
 
-$.fn.copy = function(remain) {
+$.fn.objectCopy = function(remain) {
     if(!remain) {
-        for (var idx in this[0])
-            this[0][idx] = null;
+        for (var key in this[0])
+            this[0][key] = null;
     }
 
     return JSON.parse(JSON.stringify(this))[0];
@@ -139,6 +165,15 @@ $.fn.setCount = function() {
         }
     }
     return count;
+};
+
+$.fn.backup = function() {
+    $(this[0].SETTING).fitModel(window.CONST.MODEL.SETTING);
+
+    for(var idx in this[0].CARDS)
+        $(this[0].CARDS[idx]).fitModel(window.CONST.MODEL.CARD);
+
+    $.cookie("Database", this[0]);
 };
 
 Date.prototype.format = function(format) {

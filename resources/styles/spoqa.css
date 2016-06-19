@@ -1,3 +1,4 @@
+/* Spoqa Default Style */
 .spoqa-blue { color:#4c80f1; }
 .spoqa-blue.light { color:#00a9dd; }
 .spoqa-blue.dark { color:#8c6bf7; }
@@ -26,6 +27,7 @@
     user-select: none;
     -webkit-appearance: none;
     transition: background 0.2s ease, color 0.1s ease;
+    overflow:hidden;
 }
 
 .spoqa-btn.primary {

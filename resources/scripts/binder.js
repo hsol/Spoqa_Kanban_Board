@@ -9,7 +9,7 @@ $(".modal .btn-close img").on("click", function(){
 
 $(".btn-issue.act-submit").on("click", function(){
     var article = $(this).parents(".modal").find("article.content");
-    var data = $(window.CONST.MODEL.CARD).copy(false);
+    var data = $(window.CONST.MODEL.CARD).objectCopy(false);
 
     data.issueType = article.find("[name=issue-type]").val();
     data.name = article.find("[name=issue-name]").val();
@@ -81,6 +81,83 @@ $(".quick-filters .act-filter").on("click", function() {
     }
 
     $("section.grid").each(function(){ $(this).setCount(); });
+});
+
+$("aside#aside .btn-settings").on("click", function(){
+    if(!window.CONST.DB.SETTING)
+        window.CONST.DB.SETTING = $(window.CONST.MODEL.SETTING).objectCopy(false);
+
+    $("aside#aside li.setting.SECRET_MODE img.switch").attr("src", window.CONST.DB.SETTING.SECRET_MODE ? window.CONST.SWITCH_IMG.on : window.CONST.SWITCH_IMG.off);
+    $("aside#aside li.setting.AUTO_BACKUP img.switch").attr("src", window.CONST.DB.SETTING.AUTO_BACKUP ? window.CONST.SWITCH_IMG.on : window.CONST.SWITCH_IMG.off);
+    $("aside#aside li.setting.AUTO_BACKUP_TIME input").val(window.CONST.DB.SETTING.AUTO_BACKUP_TIME || 30);
+
+    var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.CONST.DB));
+    $("aside#aside li.setting .act-archive").attr("href", "data:" + data);
+
+    if($(this).hasClass("unfold")){
+        $(this).parents("aside#aside").animate({
+            right: 0
+        }, 500, function(){
+            $(this).css("right", "0");
+            $(this).css("overflow-y", "auto");
+        });
+    } else if ($(this).hasClass("fold")) {
+        $(this).parents("aside#aside").animate({
+            right: -($(window).innerWidth())
+        }, 500, function(){
+            $(this).css("right", "-100%");
+            $(this).css("overflow-y", "visible");
+        });
+    }
+});
+
+$("aside#aside li.setting .values img.switch").on("click", function() {   
+    var key = $(this).parents("li.setting").attr("class").replace("setting ", "").trim();
+    if($(this).hasClass("on")) {
+        window.CONST.DB.SETTING[key] = false;
+
+        $(this).removeClass("on");
+        $(this).attr("src", window.CONST.SWITCH_IMG.off);
+    } else {
+        window.CONST.DB.SETTING[key] = true;
+
+        $(this).addClass("on");
+        $(this).attr("src", window.CONST.SWITCH_IMG.on);
+    }
+
+    initialization();
+});
+$("aside#aside li.setting .values input[type=text]").on("change", function() {
+    var key = $(this).parents("li.setting").attr("class").replace("setting ", "");
+    window.CONST.DB.SETTING[key] = $(this).val();
+
+    initialization();
+});
+$("aside#aside li.setting .act-restore").on("click", function(){
+    var evt = document.createEvent("MouseEvents");
+    evt.initEvent("click", true, false);
+    $("input[type=file][name=archive]")[0].dispatchEvent(evt);
+});
+$("aside#aside li.setting .values input[type=file]").on("change", function(event) {
+    if($(this).val()) {
+        var extension = $(this).val().replace(/^.*\./, '');
+        if(extension === "json"){
+            if(confirm("Previous data will be overwritten. Continue?")){
+                var file = $(this)[0].files[0];
+                var fileReader = new FileReader();
+                fileReader.onload = function(){
+                    window.CONST.DB = JSON.parse(fileReader.result);
+                    alert("load completed.");
+
+                    window.location.reload();
+                };
+                fileReader.readAsText(file);
+
+            }
+        } else {
+            alert("The file extension must *.json");
+        }
+    }
 });
 
 $(document).on("click", "li.card section.info", function(event){

@@ -108,6 +108,50 @@
         <footer></footer>
     </section>
 </section>
+<aside id="aside">
+    <section class="btn-settings unfold"><img src="./resources/images/icn_setting.png" /></section>
+    <header>
+        <div class="brand-logo spoqa-grey">Spoqa</div>
+        <div class="page-title">Settings</div>
+        <div class="btn-settings fold"><img src="./resources/images/icn_arrow_right_white.png" /></div>
+    </header>
+    <article>
+        <ul class="settings">
+            <li class="setting SECRET_MODE">
+                <h1>Hide Database Cookies</h1>
+                <div class="values">
+                    <label>ON</label>
+                    <img class="switch" src="./resources/images/icn_switch_off.png" />
+                    <label>OFF</label>
+                </div>
+            </li>
+            <li class="setting AUTO_BACKUP">
+                <h1>Auto Backup Setting</h1>
+                <div class="values">
+                    <label>ON</label>
+                    <img class="switch on" src="./resources/images/icn_switch_on.png" />
+                    <label>OFF</label>
+                </div>
+            </li>
+            <li class="setting AUTO_BACKUP_TIME">
+                <h1>Auto Backup Interval</h1>
+                <div class="values">
+                    <input type="text" name="interval" value="30" />
+                    <label>SEC</label>
+                </div>
+            </li>
+            <li class="setting ARCHIVE">
+                <h1>Archive Option</h1>
+                <div class="values">
+                    <a class="act-archive spoqa-btn primary" download="spoqa_kanban_board.json">Download database</a>
+                    <button class="act-restore spoqa-btn primary">Upload database</button>
+                    <input type="file" name="archive">
+                </div>
+            </li>
+        </ul>
+    </article>
+    <footer></footer>
+</aside>
 <section class="modal-group">
     <div id="issue-creator" class="modal">
         <div class="btn-close"><img class="w_1024_h" src="./resources/images/icn_cancel.png"><img class="w_1024" src="./resources/images/icn_cancel_black.png"></div>
