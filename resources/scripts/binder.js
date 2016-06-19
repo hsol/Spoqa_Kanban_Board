@@ -298,7 +298,7 @@ $(document).on("click", "li.card .btn-remove", function(){
 
     $(this).parents("li.card").fadeOut( 300, function () {
         window.CONST.QUERY.setObject(window.CONST.DB.CARDS);
-        window.CONST.QUERY.setQuery("idx, issueType, name, contents, tag, reg WHERE idx != " + issueIdx + " ORDER -idx");
+        window.CONST.QUERY.setQuery("idx, issueType, name, grid, contents, tag, reg WHERE idx != " + issueIdx + " ORDER -idx");
         window.CONST.DB.CARDS = window.CONST.QUERY.getResult();
 
         $(this).parents("li.card").remove();
