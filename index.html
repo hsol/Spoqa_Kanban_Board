@@ -19,7 +19,7 @@
     <script type="text/javascript" src="./resources/scripts/lib/JsQuery.min.js"></script>
     <script type="text/javascript" src="./resources/scripts/lib/isMobile.min.js"></script>
 
-    <script src="http://www.google.com/jsapi"></script>
+    <script src="//www.google.com/jsapi"></script>
     <script>
         google.load( "webfont", "1" );
         google.setOnLoadCallback(function() {
@@ -39,12 +39,12 @@
     <script type="text/javascript" src="./resources/scripts/base.js"></script>
 
     <script id="tpl-card" type="x-tmpl-mustache">
-        <li class="card {{issueType}}" data-idx="{{idx}}">
+        <li class="card {{issueType}}" data-idx="{{idx}}" data-tag="{{tag}}">
             <section class="btn-group">
                 <img src="{{icnUrl}}">
             </section>
             <section class="info">
-                <header class="title spoqa-blue light">{{name}}</header>
+                <header class="title spoqa-blue">{{name}}</header>
                 <div class="btn-remove"><img src="./resources/images/icn_cancel_black.png" /></div>
                 <article class="content">{{contents}}</article>
                 <footer class="reg w_425_h">{{reg}}</footer>
@@ -56,6 +56,7 @@
     <script src="./resources/scripts/lib/selectivizr-min.js"></script>
     <script src="./resources/scripts/lib/html5shiv.js"></script>
     <script src="./resources/scripts/lib/respond.min.js"></script>
+    <script src="./resources/scripts/lib/jquery.backgroundSize.js"></script>
     <![endif]-->
 </head>
 <body>
@@ -66,7 +67,7 @@
         <div class="quick-filters">
             <label class="spoqa-grey">QUICK FILTERS</label>
             <ul>
-                <li class="act-filter all spoqa-blue light">All</li>
+                <li class="act-filter all spoqa-blue light selected">All</li>
                 <li class="act-filter imp spoqa-blue light">Improvement</li>
                 <li class="act-filter def spoqa-blue light">Defect</li>
             </ul>
@@ -107,11 +108,56 @@
         <footer></footer>
     </section>
 </section>
+<aside id="aside">
+    <section class="btn-settings unfold"><img src="./resources/images/icn_setting.png" /></section>
+    <header>
+        <div class="brand-logo spoqa-grey">Spoqa</div>
+        <div class="page-title">Settings</div>
+        <div class="btn-settings fold"><img src="./resources/images/icn_arrow_right_white.png" /></div>
+    </header>
+    <article>
+        <ul class="settings">
+            <li class="setting SECRET_MODE">
+                <h1>Hide Database Cookies</h1>
+                <div class="values">
+                    <label>ON</label>
+                    <img class="switch" src="./resources/images/icn_switch_off.png" />
+                    <label>OFF</label>
+                </div>
+            </li>
+            <li class="setting AUTO_BACKUP">
+                <h1>Auto Backup Setting</h1>
+                <div class="values">
+                    <label>ON</label>
+                    <img class="switch on" src="./resources/images/icn_switch_on.png" />
+                    <label>OFF</label>
+                </div>
+            </li>
+            <li class="setting AUTO_BACKUP_TIME">
+                <h1>Auto Backup Interval</h1>
+                <div class="values">
+                    <input type="text" name="interval" value="30" />
+                    <label>SEC</label>
+                </div>
+            </li>
+            <li class="setting ARCHIVE">
+                <h1>Archive Option</h1>
+                <div class="values">
+                    <a class="act-archive spoqa-btn primary" download="spoqa_kanban_board.json">Download database</a>
+                    <button class="act-restore spoqa-btn primary">Upload database</button>
+                    <input type="file" name="archive">
+                </div>
+            </li>
+        </ul>
+    </article>
+    <footer></footer>
+</aside>
 <section class="modal-group">
     <div id="issue-creator" class="modal">
         <div class="btn-close"><img class="w_1024_h" src="./resources/images/icn_cancel.png"><img class="w_1024" src="./resources/images/icn_cancel_black.png"></div>
         <header class="title">
-            <h1>Create Issue</h1>
+            <h1 class="create">Create Issue</h1>
+            <h1 class="modify">Modify Issue</h1>
             <p>Nulla metus metus ullamcorper vel, tincidunt sed euismod in nibh.</p>
         </header>
         <article class="content">
@@ -139,7 +185,8 @@
             </div>
         </article>
         <footer class="submit">
-            <button class="btn-issue act-create spoqa-btn primary">Create</button>
+            <button class="create btn-issue act-submit spoqa-btn primary">Create</button>
+            <button class="modify btn-issue act-submit spoqa-btn primary">Modify</button>
         </footer>
     </div>
 </section>
