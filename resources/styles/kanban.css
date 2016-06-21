@@ -26,7 +26,7 @@ section.modal-group {
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#80000000,endColorstr=#80000000);
     padding:1em;
     overflow-y: auto;
-    z-index:10;
+    z-index:1000;
 }
 
 section.modal-group .modal {
