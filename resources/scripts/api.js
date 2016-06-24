@@ -48,11 +48,12 @@ $(function () {
             CARDS: [],
             GRIDS: []
         },
-        QUERY: new JsQuery()
+        QUERY: new JsQuery(),
+        GC: new GiantCookie({json:true, defaults:{expires:9999999}})
     };
-    window.CONST.DB.SETTING = $.extend(window.CONST.DB.SETTING, $.cookie("DB-SETTING"));
-    window.CONST.DB.GRIDS = $.extend(window.CONST.DB.GRIDS, $.cookie("DB-GRIDS"));
-    window.CONST.DB.CARDS = $.extend(window.CONST.DB.CARDS, $.cookie("DB-CARDS"));
+    window.CONST.DB.SETTING = $.extend(window.CONST.DB.SETTING, window.CONST.GC.cookie("DB-SETTING"));
+    window.CONST.DB.GRIDS = $.extend(window.CONST.DB.GRIDS, window.CONST.GC.cookie("DB-GRIDS"));
+    window.CONST.DB.CARDS = $.extend(window.CONST.DB.CARDS, window.CONST.GC.cookie("DB-CARDS"));
 
     if(window.CONST.DB.GRIDS.length <= 0) {
         window.CONST.DB.GRIDS = [
@@ -91,8 +92,8 @@ function initSettings() {
     clearInterval(window.CONST.INTERVAL);
 
     if (window.CONST.DB.SETTING ? window.CONST.DB.SETTING.SECRET_MODE : window.CONST.SECRET_MODE){
-        $.removeCookie("DB-GRIDS");
-        $.removeCookie("DB-CARDS");
+        window.CONST.GC.removeCookie("DB-GRIDS");
+        window.CONST.GC.removeCookie("DB-CARDS");
     }
     else {
         if (window.CONST.DB.SETTING ? window.CONST.DB.SETTING.AUTO_BACKUP : window.CONST.AUTO_BACKUP) {
@@ -310,15 +311,16 @@ $.fn.setCount = function () {
 $.fn.backup = function () {
     $(this[0].SETTING).fitModel(window.CONST.MODEL.SETTING);
 
-    for (var idx in this[0].GRIDS)
+    for (var idx in this[0].GRIDS) {
         $(this[0].GRIDS[idx]).fitModel(window.CONST.MODEL.GRID);
+    }
 
     for (var idx in this[0].CARDS)
         $(this[0].CARDS[idx]).fitModel(window.CONST.MODEL.CARD);
 
-    $.cookie("DB-SETTING", this[0].SETTING);
-    $.cookie("DB-GRIDS", this[0].GRIDS);
-    $.cookie("DB-CARDS", this[0].CARDS);
+    window.CONST.GC.cookie("DB-SETTING", this[0].SETTING);
+    window.CONST.GC.cookie("DB-GRIDS", this[0].GRIDS);
+    window.CONST.GC.cookie("DB-CARDS", this[0].CARDS);
 };
 
 /**

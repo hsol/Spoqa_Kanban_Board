@@ -1,8 +1,4 @@
 $(function () {
-    // jquery.cookie 초기 설정
-    $.cookie.json = true;
-    $.cookie.defaults.expires = 9999999;
-
     // mustache 미리 로딩
     Mustache.parse($('#tpl-card').html());
     Mustache.parse($('#tpl-grid').html());
